@@ -61,6 +61,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         //Long click for dropping pins
         setMapLongClick(map)
 
+        //Show POI details when clicked
+        setPoiClick(map)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -108,6 +111,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     .title(getString(R.string.dropped_pin))  //Only used if a title is needed.
                     .snippet(snippet) //Only used if a title is needed.
             )
+        }
+    }
+
+    //Show Point of Interest details when clicked
+    private fun setPoiClick(map: GoogleMap) {
+        map.setOnPoiClickListener { poi ->
+            val poiMarker = map.addMarker(
+                MarkerOptions()
+                    .position(poi.latLng)
+                    .title(poi.name)
+            )
+            poiMarker.showInfoWindow()
         }
     }
 
