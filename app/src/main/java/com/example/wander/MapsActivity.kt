@@ -12,7 +12,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.wander.databinding.ActivityMapsBinding
+import java.util.*
 
+//Data class for map zoom levels.
 data class ZoomLevel(
     val WORLD: Float = 1f,
     val CONTINENT: Float = 5f,
@@ -52,12 +54,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Add a marker in Singapore and move the camera
         val flamingoValley = LatLng(1.3188355976591175, 103.92273898388306)
-
         val zoomLevel = ZoomLevel().STREET
-
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(flamingoValley,zoomLevel))
-
         map.addMarker(MarkerOptions().position(flamingoValley).title("Flamingo Valley"))
+
+        //Long click for dropping pins
+        setMapLongClick(map)
 
     }
 
@@ -87,4 +89,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         else -> super.onOptionsItemSelected(item)
     }
+
+    //Drop market on long click
+    private fun setMapLongClick(map: GoogleMap) {
+        map.setOnMapLongClickListener { latLng ->
+
+            // A Snippet is Additional text that's displayed below the title of a dropped pin.
+            val snippet = String.format(
+                Locale.getDefault(),
+                "Lat: %1$.5f, Long: %2$.5f",
+                latLng.latitude,
+                latLng.longitude
+            )
+
+            map.addMarker(
+                MarkerOptions()
+                    .position(latLng)
+                    .title(getString(R.string.dropped_pin))  //Only used if a title is needed.
+                    .snippet(snippet) //Only used if a title is needed.
+            )
+        }
+    }
+
 }
