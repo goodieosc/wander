@@ -11,10 +11,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.example.wander.databinding.ActivityMapsBinding
-import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.*
 import java.util.*
 
 //Data class for map zoom levels.
@@ -63,6 +61,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(flamingoValley,zoomLevel))
         map.addMarker(MarkerOptions().position(flamingoValley).title("Flamingo Valley"))
 
+        //Add an image as a ground overlay
+        val overlaySize = 100f
+        val androidOverlay = GroundOverlayOptions()
+            .image(BitmapDescriptorFactory.fromResource(R.drawable.android))
+            .position(flamingoValley, overlaySize)
+
         //Long click for dropping pins
         setMapLongClick(map)
 
@@ -71,6 +75,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //Set a custom style for the map using a JSON template from https://mapstyle.withgoogle.com/
         setMapStyle(map)
+
+        //Add an image as a ground overlay
+        map.addGroundOverlay(androidOverlay)
 
     }
 
