@@ -13,6 +13,14 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.wander.databinding.ActivityMapsBinding
 
+data class ZoomLevel(
+    val WORLD: Float = 1f,
+    val CONTINENT: Float = 5f,
+    val CITY: Float = 10f,
+    val STREET: Float = 15f,
+    val BUILDING: Float = 20f
+)
+
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
@@ -42,10 +50,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        map.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        // Add a marker in Singapore and move the camera
+        val flamingoValley = LatLng(1.3188355976591175, 103.92273898388306)
+
+        val zoomLevel = ZoomLevel().STREET
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(flamingoValley,zoomLevel))
+
+        map.addMarker(MarkerOptions().position(flamingoValley).title("Flamingo Valley"))
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
