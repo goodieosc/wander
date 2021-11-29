@@ -1,7 +1,9 @@
 package com.example.wander
 
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 
@@ -12,6 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.wander.databinding.ActivityMapsBinding
+import com.google.android.gms.maps.model.MapStyleOptions
 import java.util.*
 
 //Data class for map zoom levels.
@@ -27,6 +30,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+
+    private val TAG = MapsActivity::class.java.simpleName //For logging
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +68,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //Show POI details when clicked
         setPoiClick(map)
+
+        //Set a custom style for the map using a JSON template from https://mapstyle.withgoogle.com/
+        setMapStyle(map)
 
     }
 
@@ -123,6 +131,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     .title(poi.name)
             )
             poiMarker.showInfoWindow()
+        }
+    }
+
+    //Set a custom style for the map using a JSON template from https://mapstyle.withgoogle.com/
+    private fun setMapStyle(map: GoogleMap) {
+        try {
+            // Customize the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            val success = map.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                    this,
+                    R.raw.map_style
+                )
+            )
+
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.")
+            }
+        } catch (e: Resources.NotFoundException) {
+            Log.e(TAG, "Can't find style. Error: ", e)
         }
     }
 
